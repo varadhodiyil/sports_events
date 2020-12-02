@@ -43,3 +43,10 @@ This runs all the testcases defined in all the apps, defined in `tests.py` in ea
 
 ## Get Match by Id
 ![match](img/get-one.png)
+
+
+## Update Odds
+![update](img/update-odds.png)
+
+## NewEvent
+![new](img/new-event.png)
