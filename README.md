@@ -1,7 +1,7 @@
 # sports_events
 Provides API for list, get match for betting
 
-Built as Rest API, this uses `django-rest-framework` and `django`. Database used is `MySQL`.
+Built as Rest API, this uses `django-rest-framework` and `django`. Database used is `MySQL`. The app is documented with Swagger and redoc.
 
 
 # Setup
@@ -27,4 +27,19 @@ To test the app,
     
 This runs all the testcases defined in all the apps, defined in `tests.py` in each app.
 
+
+# Sample Images
+
+## Swagger Documentation
+![swagger](img/swagger.png)
+
+## ReDoc Documentation
+![redoc](img/redoc.png)
+
+
+## List all Events
+![list](img/list.png)
     
+
+## Get Match by Id
+![match](img/get-one.png)
