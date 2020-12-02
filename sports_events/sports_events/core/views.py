@@ -90,8 +90,8 @@ class EventsAPI(ListAPIView):
                 m['sport'] = sport_model
                 markert_model = serializers.MarketsSerializer(data=m)
                 if markert_model.is_valid():
-                    markert_model, _ = models.Markets.objects.get_or_create(
-                        **m)
+                    markert_model, _ = models.Markets.objects.get_or_create( id = m['id'],
+                        defaults= m)
                 else:
                     event_model.delete()
                     sport_model.delete()
