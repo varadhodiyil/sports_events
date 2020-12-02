@@ -126,5 +126,4 @@ class EventAPI(GenericAPIView):
         s = self.get_serializer(data)
         return Response(s.data)
 
-    def put(self, request, id, *args, **kwargs):
-        return Response()
+   

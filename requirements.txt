@@ -1,0 +1,7 @@
+django
+markdown
+django-cors-headers
+mysqlclient
+drf-yasg
+drf-yasg[validation]
+django-cors-headers
