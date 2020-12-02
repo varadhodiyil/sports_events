@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
 import os
+from django.core.exceptions import ImproperlyConfigured
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -20,10 +21,18 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '7+_9y+iibdk)9w$8)1_3fi3%1*x*m)rh16=n9em%^x^#z!^1*0'
+
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+
+
+def get_env_variable(var_name):
+    try:
+        return os.environ[var_name]
+    except KeyError:
+        error_msg = "Cannot find {0}".format(var_name)
+        raise ImproperlyConfigured(error_msg)
 
 
 ISDEV = True
@@ -33,13 +42,14 @@ if ISDEV:
     MYSQL_PASSWORD = "8080_1080"
     MYSQL_DATABASE_NAME = "spectate_888"
     MYSQL_USER = "root"
-
+    SECRET_KEY = '7+_9y+iibdk)9w$8)1_3fi3%1*x*m)rh16=n9em%^x^#z!^1*0'
 else:
-    MYSQL_HOST = "localhost"
-    MYSQL_PASSWORD = ""
-    MYSQL_DATABASE_NAME = "spectate_888"
-    MYSQL_USER = "root"
+    MYSQL_HOST = get_env_variable("db_host")
+    MYSQL_PASSWORD = get_env_variable("db_pass")
+    MYSQL_DATABASE_NAME = get_env_variable("db_name")
+    MYSQL_USER = get_env_variable("db_user")
     DEBUG = False
+    SECRET_KEY = get_env_variable("secret_key")
 
 ALLOWED_HOSTS = ['*']
 
@@ -53,17 +63,17 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-   	'django_filters',
-   	'sports_events.core',
-   	'rest_framework',
-   	'corsheaders',
+    'django_filters',
+    'sports_events.core',
+    'rest_framework',
+    'corsheaders',
     'drf_yasg',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-   	'corsheaders.middleware.CorsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -149,7 +159,7 @@ CORS_ALLOW_CREDENTIALS = True
 
 REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
-   	# 'DEFAULT_PAGINATION_CLASS': 'sports_events.paginations.StandardResultsSetPagination',
+    # 'DEFAULT_PAGINATION_CLASS': 'sports_events.paginations.StandardResultsSetPagination',
     'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema',
     'DEFAULT_RENDERER_CLASSES': (
         'rest_framework.renderers.JSONRenderer',
