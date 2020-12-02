@@ -44,9 +44,24 @@ This runs all the testcases defined in all the apps, defined in `tests.py` in ea
 ## Get Match by Id
 ![match](img/get-one.png)
 
+## Search by Sport - FootFall
+![s-fb](img/search.png)
+
+## Search By Sport - Cricet
+![s-cr](img/search-cricket.png)
+
+
+## Ordering By startTime
+![ord](img/ordering-time.png)
+
+## Ordering , Search
+![ord-s](img/ord-search.png)
+
+
 
 ## Update Odds
 ![update](img/update-odds.png)
 
 ## NewEvent
 ![new](img/new-event.png)
+
