@@ -46,13 +46,21 @@ class EventsAPI(ListAPIView):
             message_type = provider_s.validated_data['message_type']
             event_d = provider_s.validated_data.pop('event')
             if message_type == "NewEvent":
-
+                event_model = models.Events.objects.filter(id=event_d['id'])
+                if event_model.count() > 0:
+                    result['status'] = False
+                    result['message'] = "Event Already added, Try calling updateEvent"
+                    return Response(result , status = status.HTTP_400_BAD_REQUEST)
                 s = serializers.EventsSerializer(data=event_d)
             elif message_type == "UpdateOdds":
                 event_model = models.Events.objects.filter(id=event_d['id'])
                 event_model = get_object_or_404(event_model)
                 s = serializers.EventsSerializer(
                     instance=event_model, data=event_d)
+            else:
+                result['status'] = False
+                result['message'] = "Invalid Message Type"
+                return Response(result , status = status.HTTP_400_BAD_REQUEST)
         else:
             result['status'] = False
             result['errors'] = provider_s.errors
@@ -64,8 +72,8 @@ class EventsAPI(ListAPIView):
             market = s.validated_data.pop('markets')
             sport_model = serializers.SportsSerializer(data=sport)
             if sport_model.is_valid():
-                sport_model, _ = models.Sports.objects.get_or_create(
-                    **sport_model.validated_data)
+                sport_model, _ = models.Sports.objects.get_or_create(id = sport_model.validated_data['id'],
+                    defaults = sport_model.validated_data )
                 s.validated_data['sport'] = sport_model
                 event_model, _ = models.Events.objects.get_or_create(
                     **s.validated_data)
