@@ -45,6 +45,8 @@ class EventsAPI(ListAPIView):
         if provider_s.is_valid():
             message_type = provider_s.validated_data['message_type']
             event_d = provider_s.validated_data.pop('event')
+
+            # Check Event Types
             if message_type == "NewEvent":
                 event_model = models.Events.objects.filter(id=event_d['id'])
                 if event_model.count() > 0:
@@ -62,27 +64,28 @@ class EventsAPI(ListAPIView):
                 result['message'] = "Invalid Message Type"
                 return Response(result , status = status.HTTP_400_BAD_REQUEST)
         else:
+            # Validation Errors
             result['status'] = False
             result['errors'] = provider_s.errors
             return Response(result, status=status.HTTP_400_BAD_REQUEST)
 
         if s.is_valid():
             result['status'] = True
-            sport = s.validated_data.pop('sport')
-            market = s.validated_data.pop('markets')
+            sport = s.validated_data.pop('sport') # Get Sport 
+            market = s.validated_data.pop('markets') # Get Market
             sport_model = serializers.SportsSerializer(data=sport)
-            if sport_model.is_valid():
+            if sport_model.is_valid(): # Validation
                 sport_model, _ = models.Sports.objects.get_or_create(id = sport_model.validated_data['id'],
-                    defaults = sport_model.validated_data )
+                    defaults = sport_model.validated_data ) # create Sport entry
                 s.validated_data['sport'] = sport_model
                 event_model, _ = models.Events.objects.get_or_create(
-                    **s.validated_data)
+                    **s.validated_data)  # create Events entry with Sport
             else:
                 sport_model = models.Sports.objects.filter(
-                    id=sport_model.validated_data['id'])
+                    id=sport_model.validated_data['id']) # Sport Exists, retrieve
                 sport_model = get_object_or_404(sport_model)
             for m in market:
-                selection = m.pop('selections')
+                selection = m.pop('selections') # For each market, save Selections
                 if len(selection) != sport_model.num_teams:
                     result['status'] = False
                     result['error'] = "Selections must be of length {0}".format(sport_model.num_teams)
@@ -93,7 +96,7 @@ class EventsAPI(ListAPIView):
                     markert_model, _ = models.Markets.objects.get_or_create( id = m['id'],
                         defaults= m)
                 else:
-                    event_model.delete()
+                    event_model.delete() # cleanup on error
                     sport_model.delete()
                     result['status'] = False
                     result['errors'] = markert_model.errors
@@ -107,7 +110,7 @@ class EventsAPI(ListAPIView):
                     selection_model.save(
                         market=markert_model, event=event_model)
                 else:
-                    event_model.delete()
+                    event_model.delete()  # cleanup on error
                     sport_model.delete()
                     markert_model.delete()
                     result['status'] = False
