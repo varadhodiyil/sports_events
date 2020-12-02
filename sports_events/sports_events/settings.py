@@ -25,7 +25,23 @@ SECRET_KEY = '7+_9y+iibdk)9w$8)1_3fi3%1*x*m)rh16=n9em%^x^#z!^1*0'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+
+ISDEV = True
+
+if ISDEV:
+    MYSQL_HOST = "localhost"
+    MYSQL_PASSWORD = "8080_1080"
+    MYSQL_DATABASE_NAME = "spectate_888"
+    MYSQL_USER = "root"
+
+else:
+    MYSQL_HOST = "localhost"
+    MYSQL_PASSWORD = ""
+    MYSQL_DATABASE_NAME = "spectate_888"
+    MYSQL_USER = "root"
+    DEBUG = False
+
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -37,19 +53,17 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-	'django_filters',
-	'sports_events.core',
-	'rest_framework',
-	'corsheaders',
+   	'django_filters',
+   	'sports_events.core',
+   	'rest_framework',
+   	'corsheaders',
     'drf_yasg',
-	
-
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-	'corsheaders.middleware.CorsMiddleware',
+   	'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -84,14 +98,13 @@ WSGI_APPLICATION = 'sports_events.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'spectate_888',
-        'USER': 'root',
-        'PASSWORD': '8080_1080',
-        'HOST': 'localhost',
+        'NAME': MYSQL_DATABASE_NAME,
+        'USER': MYSQL_USER,
+        'PASSWORD': MYSQL_PASSWORD,
+        'HOST': MYSQL_HOST,
         'PORT': '3306',
     }
 }
-
 
 
 # Password validation
@@ -135,8 +148,8 @@ CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
 
 REST_FRAMEWORK = {
-	'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
-	# 'DEFAULT_PAGINATION_CLASS': 'sports_events.paginations.StandardResultsSetPagination',
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
+   	# 'DEFAULT_PAGINATION_CLASS': 'sports_events.paginations.StandardResultsSetPagination',
     'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema',
     'DEFAULT_RENDERER_CLASSES': (
         'rest_framework.renderers.JSONRenderer',
@@ -159,3 +172,9 @@ SAVE_IMG = False
 
 
 SERVER_BASE_ADDR = "http://example.com/api/"
+
+
+STATIC_ROOT = os.path.join(BASE_DIR, "static")
+# STATICFILES_DIRS = (
+#     os.path.join(BASE_DIR, 'static'),
+# )
