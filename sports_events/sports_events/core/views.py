@@ -126,7 +126,7 @@ class EventsAPI(ListAPIView):
 
 class EventAPI(GenericAPIView):
     """
-            Get or update an Event
+            Get detailed Event 
     """
 
     serializer_class = serializers.EventsSerializer
