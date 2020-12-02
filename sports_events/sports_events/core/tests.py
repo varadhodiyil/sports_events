@@ -50,6 +50,11 @@ class TestRespStatus(APITestCase):
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
 
+    def test_get_invalid_match(self):
+        url = reverse('match', kwargs={'id': '1234'})
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 404)
+
     def test_post_bad_param(self):
         url = reverse('all_matches')
         data = {}
